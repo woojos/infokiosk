@@ -5,19 +5,20 @@
     <title></title>
 
     <link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
-
     <link rel="stylesheet" type="text/css" media="all" href="css/slider/jquery.bxslider.css" />
-
     <link rel="stylesheet" type="text/css" media="all" href="css/quiz/quiz.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="css/userForm/userForm.css" />
     <link rel="stylesheet" type="text/css" media="all" href="css/bootstrap.min.css" />
 
 </head>
 <body>
 
 
+<!-- Slider -->
 <ul id="slider" class="bxslider"></ul>
 
 
+<!-- Quiz -->
 <div id="quiz" class="quiz"></div>
 <script type="text/template" id="question-template">
     <ul><%= text %>
@@ -41,16 +42,25 @@
 
 </script>
 
+<!-- User Form -->
+
+<div id="user-form" class="user-form">
+
+
+</div>
+
 
 <script type="application/javascript" src="js/underscore-min.js" ></script>
 <script type="application/javascript" src="js/jquery-1.11.3.min.js" ></script>
 <script type="application/javascript" src="js/backbone-min.js" ></script>
+<script type="application/javascript" src="js/backbone-local-storage.js" ></script>
+
 
 
 <script type="application/javascript" src="js/slider/jquery.bxslider.min.js" ></script>
 <script type="application/javascript" src="js/slider/slider.js" ></script>
-
 <script type="application/javascript" src="js/quiz/quiz.js" ></script>
+<script type="application/javascript" src="js/userForm/userForm.js" ></script>
 
 <script type="application/javascript" src="js/app.js" ></script>
 

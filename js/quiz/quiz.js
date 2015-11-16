@@ -115,6 +115,9 @@ var QuizApp = Backbone.View.extend({
 
 
         this.questions.reset([q1, q2, q3]);
+        this.questions.each(function(element){
+           element.save();
+        });
 
     }
 
@@ -139,14 +142,15 @@ var Question = Backbone.Model.extend({
 var QuestionCollection = Backbone.Collection.extend({
 
     model: Question,
-
+    localStorage: new Backbone.LocalStorage("question-local-storage"),
     pointer:0,
 
     reset: function(models, options) {
         options = options || {};
         this.pointer = 0;
         Backbone.Collection.prototype.reset.call(this, models, options);
-    }
+    },
+
 
 });
 

@@ -36,6 +36,7 @@ var AppRouter = Backbone.Router.extend({
         this.app.quizApp.show();
 
         //this.app.quizApp.loadQuestions();
+        this.app.quizApp.questions.fetch();
         this.app.quizApp.renderQuestion(no-1);
     }
 
