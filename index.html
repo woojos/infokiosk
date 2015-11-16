@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <link href='https://fonts.googleapis.com/css?family=Slabo+27px' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" media="all" href="css/slider/jquery.bxslider.css" />
+
+    <link rel="stylesheet" type="text/css" media="all" href="css/quiz/quiz.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="css/bootstrap.min.css" />
+
+</head>
+<body>
+
+
+<ul id="slider" class="bxslider"></ul>
+
+
+<div id="quiz" class="quiz"></div>
+<script type="text/template" id="question-template">
+    <ul><%= text %>
+        <% _.each(answers, function(q) { %>
+        <li>
+            <input id="answer<%= q.id %>" type="radio" name="question" class="answer-radio" value="<%= q.id %>">
+            <label for="answer<%= q.id %>">
+                <span><span></span></span>
+                <%= q.text %>
+            </label>
+        </li>
+        <% }); %>
+    </ul>
+
+    <div class="row">
+        <div class="col-md-10"></div>
+        <div class="col-md-2">
+            <button type="button" class="next-question btn btn-primary">Dalej</button>
+        </div>
+    </div>
+
+</script>
+
+
+<script type="application/javascript" src="js/underscore-min.js" ></script>
+<script type="application/javascript" src="js/jquery-1.11.3.min.js" ></script>
+<script type="application/javascript" src="js/backbone-min.js" ></script>
+
+
+<script type="application/javascript" src="js/slider/jquery.bxslider.min.js" ></script>
+<script type="application/javascript" src="js/slider/slider.js" ></script>
+
+<script type="application/javascript" src="js/quiz/quiz.js" ></script>
+
+<script type="application/javascript" src="js/app.js" ></script>
+
+
+</body>
+</html>

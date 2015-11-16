@@ -1,0 +1,27 @@
+.quiz {
+    width:60%;
+    margin:200px auto;
+    font-family: 'Slabo 27px', serif;
+}
+
+.quiz ul {
+    font-size: 2em;
+    list-style-type: none;
+}
+
+.quiz ul li {
+    margin-left:50px;
+}
+
+.quiz ul li input[type="radio"] {
+    vertical-align: middle;
+    border-radius: 14px;
+    width: 20px;
+    height: 20px;
+}
+
+
+button.next-question {
+    display:none;
+}
+

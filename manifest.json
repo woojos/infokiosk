@@ -1,0 +1,14 @@
+{
+  "name": "KioskHTML",
+  "description": "Send a message to a native application.",
+  "version": "1.0",
+  "manifest_version": 2,
+  "app": {
+    "launch": {
+      "local_path": "index.html"
+    }
+  },
+  "permissions": [
+    "nativeMessaging"
+  ]
+}
