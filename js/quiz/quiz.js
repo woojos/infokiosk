@@ -8,18 +8,18 @@ var QuizApp = Backbone.View.extend({
     el: null,
 
     questions:null,
-
-    pointer:0,
+    _questionCountOnSession:0,
+    _currentQuestionInSession:0,
 
     initialize: function(options) {
         this.el = options.el;
         this.questions = new QuestionCollection;
+        this._questionCountOnSession = options.questionCountOnSession;
     },
 
     events: {
-        'click .next-question': 'nextQuestion',
-        'change input[type=radio]': 'showNextButton'
-
+        'click .next-question': '_nextQuestion',
+        'change input[type=radio]': '_showNextButton'
     },
 
     show: function() {
@@ -30,26 +30,48 @@ var QuizApp = Backbone.View.extend({
         this.el.hide();
     },
 
-    renderQuestion: function(pointer) {
-        this.pointer = pointer;
-        console.log(this.questions.length);
-        var question = new QuestionView({"model":this.questions.at(pointer)});
+    renderQuestion: function() {
+        var question = new QuestionView({"model":this.questions.current()});
         this.el.html(question.render().el);
     },
 
-    nextQuestion: function() {
-        app.router.navigate('#quiz/'+(this.pointer+2), {trigger:true});
+    next: function() {
+
+        console.log(this._currentQuestionInSession + ' > ' + this._questionCountOnSession);
+
+        if (this._currentQuestionInSession >= this._questionCountOnSession) {
+            return false;
+        } else {
+            this._currentQuestionInSession++;
+            this.questions.next();
+            return true;
+        }
+
     },
 
-    showNextButton: function() {
+    _nextQuestion: function() {
+        console.log(this._currentQuestionInSession);
+        app.router.navigate('#quiz/'+(this._currentQuestionInSession+1), {trigger:true});
+    },
+
+    _showNextButton: function() {
         $('button.next-question').show();
+    },
+
+    makeActivate: function() {
+        this.show();
+        this._currentQuestionInSession = 0;
+    },
+
+    makeInactive: function() {
+        this.hide();
     },
 
     loadQuestions: function() {
 
         var q1 = new Question({
             "id":1,
-            "text":"Czy lubisz frytki ?",
+            "text":"Czy lubisz frytki [1]?",
             "answers": [
                 new Answer({
                     "id":1,
@@ -71,7 +93,7 @@ var QuizApp = Backbone.View.extend({
 
         var q2 = new Question({
             "id":2,
-            "text":"Czy Mikołaj jest fajny ?",
+            "text":"Czy Mikołaj jest fajny [2]?",
             "answers": [
                 new Answer({
                     "id":4,
@@ -93,7 +115,7 @@ var QuizApp = Backbone.View.extend({
 
         var q3 = new Question({
             "id":3,
-            "text":"Czy lubisz koty?",
+            "text":"Czy lubisz koty [3]?",
             "answers": [
                 new Answer({
                     "id":7,
@@ -143,14 +165,28 @@ var QuestionCollection = Backbone.Collection.extend({
 
     model: Question,
     localStorage: new Backbone.LocalStorage("question-local-storage"),
-    pointer:0,
+    _pointer:0,
+
+    _current:0,
 
     reset: function(models, options) {
         options = options || {};
-        this.pointer = 0;
+        this._pointer = 0;
+        this._current = 0;
         Backbone.Collection.prototype.reset.call(this, models, options);
     },
 
+    next: function() {
+        if (this.length == this._pointer) {
+            this._pointer = 0;
+        }
+        this._current = this._pointer;
+        return this.at(this._pointer++);
+    },
+
+    current: function() {
+        return this.at(this._current);
+    }
 
 });
 

@@ -14,30 +14,41 @@ var AppRouter = Backbone.Router.extend({
     routes: {
         '': 'index',
         'quiz' : 'quizLoad',
-        'quiz/:no' : 'quiz'
+        'quiz/:no' : 'quiz',
+        'user-form' : 'userForm'
     },
 
     index: function() {
+        this._switchOffAll();
+        this.app.sliderApp.makeActivate();
 
-        this.app.quizApp.hide();
-
-        this.app.sliderApp.show();
-        this.app.sliderApp.start();
     },
 
     quizLoad: function() {
-        this.app.quizApp.loadQuestions();
+        this._switchOffAll();
+        this.app.quizApp.makeActivate();
         this.navigate('#quiz/1', {trigger: true});
     },
 
     quiz: function(no) {
-        this.app.sliderApp.hide();
-        this.app.sliderApp.stop();
-        this.app.quizApp.show();
 
-        //this.app.quizApp.loadQuestions();
         this.app.quizApp.questions.fetch();
-        this.app.quizApp.renderQuestion(no-1);
+
+        if (this.app.quizApp.next()) {
+            this.app.quizApp.renderQuestion();
+        } else {
+            this.navigate('user-form', {trigger: true});
+        }
+    },
+
+    userForm: function() {
+        this._switchOffAll();
+        this.app.userFormApp.makeActive();
+    },
+
+    _switchOffAll: function() {
+        this.app.quizApp.makeInactive();
+        this.app.sliderApp.makeInactive();
     }
 
 });
@@ -52,9 +63,12 @@ var App = Backbone.View.extend({
 
     quizApp: {},
 
+    userFormApp: {},
+
     initialize: function() {
         this.initSliderApp();
         this.initQuizApp();
+        this.initUserForm();
 
         this.router = new AppRouter({'app':this});
         Backbone.history.start();
@@ -73,14 +87,30 @@ var App = Backbone.View.extend({
             ]
         });
 
+        this.sliderApp.onUserAction = function() {
+            this.router.navigate('quiz', {trigger: true});
+        }.bind(this);
+
         this.sliderApp.create();
     },
 
     initQuizApp: function() {
         this.quizApp = new QuizApp({
-            'el' : $('#quiz')
+            'el' : $('#quiz'),
+            'questionCountOnSession' : 2
         });
+
+        this.quizApp.loadQuestions();
         this.quizApp.hide();
+    },
+
+    initUserForm: function() {
+        this.userFormApp = new UserFormApp({
+            'el' : $('#user-form')
+        });
+        this.userFormApp.onSave = function (that) {
+            this.router.navigate('', {trigger: true});
+        }.bind(this);
     }
 
 

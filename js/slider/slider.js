@@ -9,12 +9,18 @@ var SliderApp = Backbone.View.extend({
 
     extSlider:null,
 
+    onUserAction:null,
+
     options: {},
 
     initialize: function(options) {
 
         this.el = options.el;
         this.options = options;
+
+        this.el.click(function(){
+            this.onUserAction();
+        }.bind(this));
     },
 
     create: function() {
@@ -55,6 +61,16 @@ var SliderApp = Backbone.View.extend({
 
     hide: function() {
         this.el.parent().parent().hide();
+    },
+
+    makeActivate: function() {
+        this.show();
+        this.start();
+    },
+
+    makeInactive: function() {
+        this.stop();
+        this.hide();
     }
 });
 
