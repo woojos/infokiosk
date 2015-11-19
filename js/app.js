@@ -101,7 +101,7 @@ var App = Backbone.View.extend({
         });
 
         this.quizApp.loadQuestions();
-        this.quizApp.hide();
+        this.quizApp.makeInactive();
     },
 
     initUserForm: function() {
@@ -111,6 +111,7 @@ var App = Backbone.View.extend({
         this.userFormApp.onSave = function (that) {
             this.router.navigate('', {trigger: true});
         }.bind(this);
+        this.userFormApp.makeInactive();
     }
 
 

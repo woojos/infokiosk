@@ -1,0 +1,11 @@
+.user-form {
+    width:50%;
+    margin:120px auto;
+    font-family: 'Slabo 27px', serif;
+}
+
+.user-form input[type="text"] {
+    width:100%;
+    height: 40px;
+    margin:10px;
+}

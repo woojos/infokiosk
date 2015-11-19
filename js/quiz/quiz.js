@@ -37,7 +37,7 @@ var QuizApp = Backbone.View.extend({
 
     next: function() {
 
-        console.log(this._currentQuestionInSession + ' > ' + this._questionCountOnSession);
+        //console.log(this._currentQuestionInSession + ' > ' + this._questionCountOnSession);
 
         if (this._currentQuestionInSession >= this._questionCountOnSession) {
             return false;
@@ -50,7 +50,7 @@ var QuizApp = Backbone.View.extend({
     },
 
     _nextQuestion: function() {
-        console.log(this._currentQuestionInSession);
+        //console.log(this._currentQuestionInSession);
         app.router.navigate('#quiz/'+(this._currentQuestionInSession+1), {trigger:true});
     },
 
@@ -196,6 +196,10 @@ var QuestionView = Backbone.View.extend({
     model:null,
     template:"",
 
+    events: {
+        'change input[type=radio]': '_update'
+    },
+
     initialize: function(options) {
         this.template = _.template($('#question-template').html());
         this.model = options.model;
@@ -205,6 +209,17 @@ var QuestionView = Backbone.View.extend({
     render: function() {
         this.$el.html(this.template(this.model.toJSON()));
         return this;
+    },
+
+    _update: function() {
+        var id = $(this.el).find('input[type="radio"]:checked').attr('data-id');
+        var answer = this.model.answers.get(id);
+
+        this.model.answers.each(function(el){
+            el.set({'isChecked': false});
+        });
+
+        answer.set({'isChecked': true});
     }
 
 });
@@ -221,6 +236,7 @@ var Answer = Backbone.Model.extend({
         this.id = options.id;
         this.text = options.text;
         this.isGood = options.isGood;
+        this.isChecked = false;
     }
 
 });
