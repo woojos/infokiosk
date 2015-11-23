@@ -7,55 +7,62 @@ var UserFormApp = Backbone.View.extend({
     el: null,
 
     /* callback */
-    onSave:null,
+    onSave: null,
 
-    initialize: function(options) {
+    user: null,
+
+    initialize: function (options) {
         this.el = options.el;
 
-        console.log(this.el.find('.osk-trigger'));
+        this.user = new User;
 
         this.el.find('form').children('.osk-trigger').onScreenKeyboard({
-            rewireReturn : 'Wyślij',
-            rewireTab : true,
+            rewireReturn: 'Wyślij',
+            rewireTab: true,
             topPosition: '50%',
-            leftPosition:'27%'
+            leftPosition: '27%'
         });
 
         /* @todo to wymiany */
         $('#user-form input[type="text"]:first').click();
 
-        this.el.find('form').submit(function() {
-            console.log('dupa');
+        this.el.find('form').submit(function () {
+
+            this.user.set({
+                "firstname" : $('input[name=firstname]').val(),
+                "lastname" : $('input[name=lastname]').val(),
+                "email" : $('input[name=email]').val()
+            });
+
             this.onSave();
             return false;
         }.bind(this));
 
     },
 
-    events: {
-        'click .save-user': '_save'
-    },
-
-    _save: function() {
-        this.onSave();
-    },
-
-    show: function() {
+    show: function () {
         this.el.show();
     },
 
-    hide: function() {
+    hide: function () {
         this.el.hide();
     },
 
-    makeInactive: function() {
+    makeInactive: function () {
         this.hide();
         $('#osk-container').fadeOut('fast');
+        console.log('Make user-form inactive');
     },
 
-    makeActive: function() {
+    makeActive: function () {
         this.show();
         $('#osk-container').fadeIn('fast');
-    }
+        console.log('Make user-form active');
+    },
 
+    getDataToSave: function () {
+        return this.user;
+    }
 });
+
+var User = Backbone.Model.extend({});

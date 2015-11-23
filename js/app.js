@@ -49,6 +49,7 @@ var AppRouter = Backbone.Router.extend({
     _switchOffAll: function() {
         this.app.quizApp.makeInactive();
         this.app.sliderApp.makeInactive();
+        this.app.userFormApp.makeInactive();
     }
 
 });
@@ -112,6 +113,12 @@ var App = Backbone.View.extend({
             this.router.navigate('', {trigger: true});
         }.bind(this);
         this.userFormApp.makeInactive();
+    },
+
+
+    saveResult: function() {
+        var userData = this.userFormApp.getUser();
+
     }
 
 

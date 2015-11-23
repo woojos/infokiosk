@@ -59,12 +59,18 @@ var QuizApp = Backbone.View.extend({
     },
 
     makeActivate: function() {
+        console.log('Make quiz active');
         this.show();
         this._currentQuestionInSession = 0;
+        this.questions.invoke('set', {"isAnswered": false});
     },
 
     makeInactive: function() {
         this.hide();
+    },
+
+    getDataToSave: function() {
+        return this.questions.answeredQuestions().toJSON();
     },
 
     loadQuestions: function() {
@@ -135,8 +141,51 @@ var QuizApp = Backbone.View.extend({
             ]
         });
 
+        var q4 = new Question({
+            "id":4,
+            "text":"Czy lubisz psy [4]?",
+            "answers": [
+                new Answer({
+                    "id":10,
+                    "text":"Tak",
+                    "isGood":true
+                }),
+                new Answer({
+                    "id":11,
+                    "text":"Bardzo!!",
+                    "isGood":false
+                }),
+                new Answer({
+                    "id":12,
+                    "text":"Super!!!",
+                    "isGood":false
+                })
+            ]
+        });
 
-        this.questions.reset([q1, q2, q3]);
+        var q5 = new Question({
+            "id":5,
+            "text":"Czy Miko jest najszybszy ? [5]?",
+            "answers": [
+                new Answer({
+                    "id":13,
+                    "text":"Tak",
+                    "isGood":true
+                }),
+                new Answer({
+                    "id":14,
+                    "text":"Ja Usajn Bolt!!",
+                    "isGood":false
+                }),
+                new Answer({
+                    "id":15,
+                    "text":"Jak błyskawica!!!",
+                    "isGood":false
+                })
+            ]
+        });
+
+        this.questions.reset([q1, q2, q3, q4, q5]);
         this.questions.each(function(element){
            element.save();
         });
@@ -151,13 +200,30 @@ var Question = Backbone.Model.extend({
     id:0,
     text:"",
     answers:null,
+    isAnswered:false,
 
     initialize: function(options) {
         this.id = options.id;
         this.text = options.text;
         this.answers = new AnswerCollection;
         this.answers.reset(options.answers);
+
+        this.answers.on("change:isChecked", this._changeIsAnswered, this);
+    },
+
+    isChecked: function() {
+        if (this.answer.where({"isChecked":true}).length > 0)
+            return true;
+        else
+            return false;
+    },
+
+    _changeIsAnswered: function(el) {
+        this.set({
+            "isAnswered" : el.get("isChecked")
+        })
     }
+
 
 });
 
@@ -186,7 +252,12 @@ var QuestionCollection = Backbone.Collection.extend({
 
     current: function() {
         return this.at(this._current);
+    },
+
+    answeredQuestions: function() {
+        return new QuestionCollection(this.where({"isAnswered":true}));
     }
+
 
 });
 
@@ -203,7 +274,7 @@ var QuestionView = Backbone.View.extend({
     initialize: function(options) {
         this.template = _.template($('#question-template').html());
         this.model = options.model;
-        this.listenTo(this.model, 'change', this.render);
+        //this.listenTo(this.model, 'change', this.render);
     },
 
     render: function() {
@@ -213,6 +284,7 @@ var QuestionView = Backbone.View.extend({
 
     _update: function() {
         var id = $(this.el).find('input[type="radio"]:checked').attr('data-id');
+
         var answer = this.model.answers.get(id);
 
         this.model.answers.each(function(el){
