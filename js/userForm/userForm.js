@@ -61,8 +61,14 @@ var UserFormApp = Backbone.View.extend({
     },
 
     getDataToSave: function () {
-        return this.user;
+        return this.user.toJSON();
     }
 });
 
-var User = Backbone.Model.extend({});
+var User = Backbone.Model.extend({
+    defaults: {
+        "firstname": "",
+        "lastname": "",
+        "email": ""
+    }
+});

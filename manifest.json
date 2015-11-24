@@ -9,6 +9,8 @@
     }
   },
   "permissions": [
-    "nativeMessaging"
+    "nativeMessaging",
+    "http://localhost:8888/"
   ]
+
 }

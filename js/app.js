@@ -110,14 +110,22 @@ var App = Backbone.View.extend({
             'el' : $('#user-form')
         });
         this.userFormApp.onSave = function (that) {
+            this.saveResult();
             this.router.navigate('', {trigger: true});
         }.bind(this);
         this.userFormApp.makeInactive();
     },
 
 
-    saveResult: function() {
-        var userData = this.userFormApp.getUser();
+    saveResultt: function() {
+        var userData = this.userFormApp.getDataToSave();
+
+        $.ajax({
+            type: "POST",
+            url: 'http://localhost:8888/save',
+            data: userData,
+            dataType: 'json'
+        });
 
     }
 
