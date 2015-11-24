@@ -117,13 +117,19 @@ var App = Backbone.View.extend({
     },
 
 
-    saveResultt: function() {
+    saveResult: function() {
         var userData = this.userFormApp.getDataToSave();
+        var questions = this.quizApp.getDataToSave();
 
+        var saveObject = {};
+        saveObject.userData = userData;
+        saveObject.questions = questions;
+
+        console.log(questions);
         $.ajax({
             type: "POST",
             url: 'http://localhost:8888/save',
-            data: userData,
+            data: JSON.stringify(saveObject),
             dataType: 'json'
         });
 

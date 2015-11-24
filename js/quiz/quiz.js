@@ -62,7 +62,6 @@ var QuizApp = Backbone.View.extend({
         console.log('Make quiz active');
         this.show();
         this._currentQuestionInSession = 0;
-        this.questions.invoke('set', {"isAnswered": false});
     },
 
     makeInactive: function() {
@@ -70,7 +69,19 @@ var QuizApp = Backbone.View.extend({
     },
 
     getDataToSave: function() {
-        return this.questions.answeredQuestions().toJSON();
+
+        var objects = this.questions.answeredQuestions();
+
+        var toReturn = [];
+        objects.each(function(el) {
+            var f = el.toJSON();
+            f.answers = [];
+            el.answers.each(function(a){
+                f.answers.push(a.toJSON());
+            });
+            toReturn.push(f);
+        });
+        return toReturn;
     },
 
     loadQuestions: function() {
@@ -197,33 +208,23 @@ var QuizApp = Backbone.View.extend({
 
 var Question = Backbone.Model.extend({
 
-    id:0,
-    text:"",
-    answers:null,
-    isAnswered:false,
+    defaults: {
+        "id": 0,
+        "text": ""
+    },
 
     initialize: function(options) {
-        this.id = options.id;
-        this.text = options.text;
-        this.answers = new AnswerCollection;
-        this.answers.reset(options.answers);
-
-        this.answers.on("change:isChecked", this._changeIsAnswered, this);
+        this.options = options;
+        this.unset("answers");
+        this.answers = new AnswerCollection(options.answers);
     },
 
     isChecked: function() {
-        if (this.answer.where({"isChecked":true}).length > 0)
+        if (this.answers.where({"isChecked":true}).length > 0)
             return true;
         else
             return false;
-    },
-
-    _changeIsAnswered: function(el) {
-        this.set({
-            "isAnswered" : el.get("isChecked")
-        })
     }
-
 
 });
 
@@ -255,7 +256,13 @@ var QuestionCollection = Backbone.Collection.extend({
     },
 
     answeredQuestions: function() {
-        return new QuestionCollection(this.where({"isAnswered":true}));
+        var toReturn = [];
+
+        this.each(function(el){
+           if (el.isChecked())
+            toReturn.push(el);
+        });
+        return new QuestionCollection(toReturn);
     }
 
 
@@ -278,7 +285,7 @@ var QuestionView = Backbone.View.extend({
 
     render: function() {
 
-        this.$el.html(this.model.text);
+        this.$el.html(this.model.get("text"));
         this.model.answers.each(function(el){
             var view = new AnswerView({model: el});
             this.$el.append(view.render().el);
@@ -301,11 +308,17 @@ var QuestionView = Backbone.View.extend({
 
         var answer = this.model.answers.get(id);
 
-        this.model.answers.each(function(el){
-            el.set({'isChecked': false});
-        });
+        this.model.answers.invoke('set', {"isChecked": false});
+        answer.set("isChecked", true);
 
-        answer.set({'isChecked': true});
+        //console.log(answer.toJSON());
+        //console.log(JSON.stringify(answer));
+
+        //console.log(this.model.answers);
+        console.log(this.model);
+        //console.log(JSON.stringify(this.model.answers));
+        //console.log(JSON.stringify(this.model));
+        //console.log(this.model);
     }
 
 });
@@ -313,16 +326,15 @@ var QuestionView = Backbone.View.extend({
 
 var Answer = Backbone.Model.extend({
 
-    id:0,
-    text:"",
-    isChecked:false,
-    isGood:false,
+    defaults: {
+        "id":0,
+        "text":"",
+        "isChecked":false,
+        "isGood":false
+    },
 
     initialize: function(options) {
-        this.id = options.id;
-        this.text = options.text;
-        this.isGood = options.isGood;
-        this.isChecked = false;
+        this.options = options;
     }
 
 });
@@ -337,9 +349,9 @@ var AnswerView = Backbone.View.extend({
     },
 
     render: function() {
-        var tpl = "<input id=\"answer"+this.model.id+"\" type=\"radio\" name=\"question\" class=\"answer-radio\" data-id=\""+this.model.id+"\" value=\""+this.model.id+"\">" +
-            "<label for=\"answer"+this.model.id+"\">" +
-            "<span><span></span></span>" + this.model.text + "</label>";
+        var tpl = "<input id=\"answer"+this.model.get("id")+"\" type=\"radio\" name=\"question\" class=\"answer-radio\" data-id=\""+this.model.get("id")+"\" value=\""+this.model.get("id")+"\">" +
+            "<label for=\"answer"+this.model.get("id")+"\">" +
+            "<span><span></span></span>" + this.model.get("text") + "</label>";
         this.$el.html(tpl);
         return this;
     }
