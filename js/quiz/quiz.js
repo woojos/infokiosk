@@ -266,19 +266,33 @@ var QuestionView = Backbone.View.extend({
 
     model:null,
     template:"",
+    tagName:"ul",
 
     events: {
         'change input[type=radio]': '_update'
     },
 
     initialize: function(options) {
-        this.template = _.template($('#question-template').html());
         this.model = options.model;
-        //this.listenTo(this.model, 'change', this.render);
     },
 
     render: function() {
-        this.$el.html(this.template(this.model.toJSON()));
+
+        this.$el.html(this.model.text);
+        this.model.answers.each(function(el){
+            var view = new AnswerView({model: el});
+            this.$el.append(view.render().el);
+        }.bind(this));
+
+        this.$el.append(
+            "<div class=\"row\">" +
+                "<div class=\"col-md-10\"></div>" +
+                "<div class=\"col-md-2\">" +
+                "<button type=\"button\" class=\"next-question btn btn-primary\">Dalej</button>" +
+                "</div>" +
+            "</div>"
+        );
+
         return this;
     },
 
@@ -309,6 +323,25 @@ var Answer = Backbone.Model.extend({
         this.text = options.text;
         this.isGood = options.isGood;
         this.isChecked = false;
+    }
+
+});
+
+var AnswerView = Backbone.View.extend({
+
+    model:null,
+    tagName:'li',
+
+    initialize: function(options) {
+        this.model = options.model;
+    },
+
+    render: function() {
+        var tpl = "<input id=\"answer"+this.model.id+"\" type=\"radio\" name=\"question\" class=\"answer-radio\" data-id=\""+this.model.id+"\" value=\""+this.model.id+"\">" +
+            "<label for=\"answer"+this.model.id+"\">" +
+            "<span><span></span></span>" + this.model.text + "</label>";
+        this.$el.html(tpl);
+        return this;
     }
 
 });
