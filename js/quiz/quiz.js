@@ -272,7 +272,6 @@ var QuestionCollection = Backbone.Collection.extend({
 var QuestionView = Backbone.View.extend({
 
     model:null,
-    template:"",
     tagName:"ul",
 
     events: {
