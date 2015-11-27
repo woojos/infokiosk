@@ -75,6 +75,8 @@ var App = Backbone.View.extend({
 
     memoryApp: {},
 
+    baseURL: 'http://127.0.0.1:8888/',
+
     initialize: function() {
         this.initSliderApp();
         this.initQuizApp();
@@ -99,8 +101,8 @@ var App = Backbone.View.extend({
         });
 
         this.sliderApp.onUserAction = function() {
-            //this.router.navigate('quiz', {trigger: true});
-            this.router.navigate('memory', {trigger: true});
+            this.router.navigate('quiz', {trigger: true});
+            //this.router.navigate('memory', {trigger: true});
         }.bind(this);
 
         this.sliderApp.create();
@@ -112,7 +114,7 @@ var App = Backbone.View.extend({
             'questionCountOnSession' : 2
         });
 
-        this.quizApp.loadQuestions();
+        this.quizApp.loadQuestions(this.baseURL);
         this.quizApp.makeInactive();
     },
 
@@ -159,7 +161,7 @@ var App = Backbone.View.extend({
         console.log(questions);
         $.ajax({
             type: "POST",
-            url: 'http://localhost:8888/save',
+            url: this.baseURL + 'save',
             data: JSON.stringify(saveObject),
             dataType: 'json'
         });

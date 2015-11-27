@@ -84,8 +84,24 @@ var QuizApp = Backbone.View.extend({
         return toReturn;
     },
 
-    loadQuestions: function() {
+    loadQuestions: function(baseUrl) {
 
+        that = this;
+        $.ajax({
+            type: "GET",
+            url: baseUrl + 'question',
+            dataType: 'json',
+            success :  function (response) {
+                that.questions.reset(response);
+                that.questions.each(function(element){
+                    element.save();
+                });
+            }
+        });
+
+
+
+        /*
         var q1 = new Question({
             "id":1,
             "text":"Czy lubisz frytki [1]?",
@@ -200,6 +216,7 @@ var QuizApp = Backbone.View.extend({
         this.questions.each(function(element){
            element.save();
         });
+        */
 
     }
 
