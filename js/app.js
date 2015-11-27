@@ -156,7 +156,7 @@ var App = Backbone.View.extend({
 
         var saveObject = {};
         saveObject.userData = userData;
-        saveObject.questions = questions;
+        saveObject.quiz = questions;
 
         console.log(questions);
         $.ajax({

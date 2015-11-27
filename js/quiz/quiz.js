@@ -81,7 +81,12 @@ var QuizApp = Backbone.View.extend({
             });
             toReturn.push(f);
         });
-        return toReturn;
+
+        var saveObject = {};
+        saveObject.questions = toReturn;
+        saveObject.time = 2.3;
+
+        return saveObject;
     },
 
     loadQuestions: function(baseUrl) {
