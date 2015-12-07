@@ -25,3 +25,7 @@ button.next-question {
     display:none;
 }
 
+.quiz .timer {
+    text-align:right;
+    font-size:1.5em;
+}

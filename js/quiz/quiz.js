@@ -11,6 +11,9 @@ var QuizApp = Backbone.View.extend({
     _questionCountOnSession:0,
     _currentQuestionInSession:0,
 
+    timer:null,
+    time:0,
+
     initialize: function(options) {
         this.el = options.el;
         this.questions = new QuestionCollection;
@@ -23,11 +26,11 @@ var QuizApp = Backbone.View.extend({
     },
 
     show: function() {
-        this.el.show();
+        this.el.parent().show();
     },
 
     hide: function() {
-        this.el.hide();
+        this.el.parent().hide();
     },
 
     renderQuestion: function() {
@@ -63,10 +66,20 @@ var QuizApp = Backbone.View.extend({
         this.show();
         this._currentQuestionInSession = 0;
         this.questions.resetAnsweredQuestion();
+
+        /* timer */
+        this.time = 0;
+        var that = this;
+        this.timer = setInterval(function(){
+            that.time += 0.5;
+            that.el.parent().find('.timer').html(that.time.toFixed(1) + 's');
+            //console.log(that.time);
+        }, 500);
     },
 
     makeInactive: function() {
         this.hide();
+        clearInterval(this.timer);
     },
 
     getDataToSave: function() {
@@ -85,7 +98,7 @@ var QuizApp = Backbone.View.extend({
 
         var saveObject = {};
         saveObject.questions = toReturn;
-        saveObject.time = 2.3;
+        saveObject.time = this.time;
 
         return saveObject;
     },

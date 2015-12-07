@@ -122,7 +122,7 @@ var App = Backbone.View.extend({
 
     initQuizApp: function() {
         this.quizApp = new QuizApp({
-            'el' : $('#quiz'),
+            'el' : $('#quiz .content'),
             'questionCountOnSession' : 2
         });
 
