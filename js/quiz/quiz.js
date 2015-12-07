@@ -62,6 +62,7 @@ var QuizApp = Backbone.View.extend({
         console.log('Make quiz active');
         this.show();
         this._currentQuestionInSession = 0;
+        this.questions.resetAnsweredQuestion();
     },
 
     makeInactive: function() {
@@ -285,6 +286,15 @@ var QuestionCollection = Backbone.Collection.extend({
             toReturn.push(el);
         });
         return new QuestionCollection(toReturn);
+    },
+
+    resetAnsweredQuestion: function() {
+        this.each(function(el){
+            el.answers.each(function(a){
+                a.set('isChecked', false);
+            })
+        });
+
     }
 
 

@@ -16,13 +16,13 @@ var AppRouter = Backbone.Router.extend({
         'quiz' : 'quizLoad',
         'quiz/:no' : 'quiz',
         'user-form' : 'userForm',
-        'memory' : 'memory'
+        'memory' : 'memory',
+        'thank-you' : 'thankYou'
     },
 
     index: function() {
         this._switchOffAll();
         this.app.sliderApp.makeActivate();
-
     },
 
     quizLoad: function() {
@@ -38,7 +38,7 @@ var AppRouter = Backbone.Router.extend({
         if (this.app.quizApp.next()) {
             this.app.quizApp.renderQuestion();
         } else {
-            this.navigate('user-form', {trigger: true});
+            this.navigate('thank-you', {trigger: true});
         }
     },
 
@@ -52,11 +52,22 @@ var AppRouter = Backbone.Router.extend({
         this.app.userFormApp.makeActive();
     },
 
+    thankYou: function() {
+        this.app.saveResult();
+        this._switchOffAll();
+        this.app.displayThankYouPage();
+
+        var that = this;
+        setTimeout(function(){that.navigate('', {trigger: true})}, 4000);
+        //console.log('thank you');
+    },
+
     _switchOffAll: function() {
         this.app.quizApp.makeInactive();
         this.app.sliderApp.makeInactive();
         this.app.userFormApp.makeInactive();
         this.app.memoryApp.makeInactive();
+        this.app.hideThankYouPage();
     }
 
 });
@@ -101,7 +112,8 @@ var App = Backbone.View.extend({
         });
 
         this.sliderApp.onUserAction = function() {
-            this.router.navigate('quiz', {trigger: true});
+            this.router.navigate('user-form', {trigger: true});
+            //this.router.navigate('quiz', {trigger: true});
             //this.router.navigate('memory', {trigger: true});
         }.bind(this);
 
@@ -119,13 +131,17 @@ var App = Backbone.View.extend({
     },
 
     initUserForm: function() {
+
         this.userFormApp = new UserFormApp({
             'el' : $('#user-form')
         });
+
         this.userFormApp.onSave = function (that) {
-            this.saveResult();
-            this.router.navigate('', {trigger: true});
+            this.router.navigate('quiz', {trigger: true});
+            //this.saveResult();
+            //this.router.navigate('', {trigger: true});
         }.bind(this);
+
         this.userFormApp.makeInactive();
     },
 
@@ -166,8 +182,15 @@ var App = Backbone.View.extend({
             dataType: 'json'
         });
 
-    }
+    },
 
+    displayThankYouPage: function() {
+        $('#thank-you').show();
+    },
+
+    hideThankYouPage: function() {
+        $('#thank-you').hide();
+    }
 
 });
 

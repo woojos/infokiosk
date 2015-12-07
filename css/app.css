@@ -1,0 +1,10 @@
+body {
+    font-family: 'Slabo 27px', serif;
+}
+
+#thank-you {
+    display:none;
+    width:50%;
+    margin:120px auto;
+    font-size:2.2em;
+}

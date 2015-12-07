@@ -57,6 +57,9 @@ var UserFormApp = Backbone.View.extend({
     makeActive: function () {
         this.show();
         $('#osk-container').fadeIn('fast');
+        $('input[name=firstname]').val('');
+        $('input[name=lastname]').val('');
+        $('input[name=email]').val('');
         console.log('Make user-form active');
     },
 
