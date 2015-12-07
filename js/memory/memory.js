@@ -9,6 +9,11 @@ var MemoryApp = Backbone.View.extend({
 
     imageOpened:"",
 
+    timer:null,
+    time:0,
+
+    onEnd:null, // callback
+
     initialize: function(options) {
         this.options = options;
         this.el = options.el;
@@ -27,6 +32,11 @@ var MemoryApp = Backbone.View.extend({
         'click div.image-tile': 'clickImage'
     },
 
+    getDataToSave: function() {
+        var saveObject = {};
+        saveObject.time = this.time;
+        return saveObject;
+    },
 
     clickImage: function(el) {
 
@@ -53,10 +63,17 @@ var MemoryApp = Backbone.View.extend({
                         that.imageOpened = "";
                     }, 400);
                 } else {
+
+                    var that = this;
+
                     setTimeout(function () {
-                        console.log('sa takie same');
-                        $('img[src="' + that.imageOpened + '"]').parent().css('visibility', 'hidden');
+                        $('img[src="' + that.imageOpened + '"]').parent().addClass('invisible');
                         that.imageOpened = "";
+
+                        if (that.images.length*2 == that.el.find('.invisible').length) {
+                            console.log('koniec gry');
+                            that.onEnd();
+                        }
                     }, 400);
                 }
 
@@ -95,19 +112,34 @@ var MemoryApp = Backbone.View.extend({
     },
 
     show: function() {
-        this.el.show();
+        this.el.parent().show();
     },
 
     hide: function() {
-        this.el.hide();
+        this.el.parent().hide();
     },
 
     makeActivate: function() {
+
+        this.el.find('.invisible img').removeAttr('style');
+        this.el.find('.invisible').removeClass('invisible')
+        this.shuffleImages();
+
         this.show();
+
+        /* timer */
+        this.time = 0;
+        var that = this;
+        this.timer = setInterval(function(){
+            that.time += 0.5;
+            that.el.parent().find('.timer').html(that.time.toFixed(1) + 's');
+            //console.log(that.time);
+        }, 500);
     },
 
     makeInactive: function() {
         this.hide();
+        clearInterval(this.timer);
     }
 
 });
@@ -141,9 +173,9 @@ var MemoryImageView = Backbone.View.extend({
     }
 
 });
-
 /*
-var BoxOpened = "";
+
+ var BoxOpened = "";
 var ImgOpened = "";
 var Counter = 0;
 var ImgFound = 0;

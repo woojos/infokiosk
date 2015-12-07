@@ -113,8 +113,6 @@ var App = Backbone.View.extend({
 
         this.sliderApp.onUserAction = function() {
             this.router.navigate('user-form', {trigger: true});
-            //this.router.navigate('quiz', {trigger: true});
-            //this.router.navigate('memory', {trigger: true});
         }.bind(this);
 
         this.sliderApp.create();
@@ -137,9 +135,8 @@ var App = Backbone.View.extend({
         });
 
         this.userFormApp.onSave = function (that) {
-            this.router.navigate('quiz', {trigger: true});
-            //this.saveResult();
-            //this.router.navigate('', {trigger: true});
+            //this.router.navigate('quiz', {trigger: true});
+            this.router.navigate('memory', {trigger: true});
         }.bind(this);
 
         this.userFormApp.makeInactive();
@@ -147,10 +144,11 @@ var App = Backbone.View.extend({
 
     initMemoryApp: function() {
         this.memoryApp = new MemoryApp({
-            'el' : $('#memory'),
+            'el' : $('#memory .content'),
             'images' : [
                 'img/memory/17699259cb2d70c6882adc285ab8d519658b5dd7.png',
                 'img/memory/17699263b01721074bf094aa3bc695aa19c8d573.png',
+                /*
                 'img/memory/176992554c2ca340cc2ea8c0606ecd320824756e.png',
                 'img/memory/176992568b759acd78f7cbe98b6e4a7baa90e717.png',
                 'img/memory/176992601ca0f28ba4a8f7b41f99ee026d7aaed8.png',
@@ -159,20 +157,26 @@ var App = Backbone.View.extend({
                 'img/memory/1769925708af4fb3c954b1d856da1f4d4dcd548a.png',
                 'img/memory/1769925824ea93cbb77ba9e95c1a4cec7f89b80c.png',
                 'img/memory/17699262833250fa3063b708c41042005fda437d.png',
+                */
             ]
         });
 
+        this.memoryApp.onEnd = function() {
+            this.router.navigate('thank-you', {trigger: true});
+        }.bind(this);
         this.memoryApp.create();
-        this.memoryApp.shuffleImages();
+        //this.memoryApp.shuffleImages();
     },
 
     saveResult: function() {
         var userData = this.userFormApp.getDataToSave();
         var questions = this.quizApp.getDataToSave();
+        var memoryData = this.memoryApp.getDataToSave();
 
         var saveObject = {};
         saveObject.userData = userData;
         saveObject.quiz = questions;
+        saveObject.memory = memoryData;
 
         console.log(questions);
         $.ajax({
