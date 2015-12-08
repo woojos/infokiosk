@@ -135,8 +135,11 @@ var App = Backbone.View.extend({
         });
 
         this.userFormApp.onSave = function (that) {
-            //this.router.navigate('quiz', {trigger: true});
-            this.router.navigate('memory', {trigger: true});
+
+            /* tu przelączamy jaką gre chcemy grać */
+
+            this.router.navigate('quiz', {trigger: true});
+            //this.router.navigate('memory', {trigger: true});
         }.bind(this);
 
         this.userFormApp.makeInactive();
@@ -170,15 +173,14 @@ var App = Backbone.View.extend({
 
     saveResult: function() {
         var userData = this.userFormApp.getDataToSave();
-        var questions = this.quizApp.getDataToSave();
+        var quizData = this.quizApp.getDataToSave();
         var memoryData = this.memoryApp.getDataToSave();
 
         var saveObject = {};
         saveObject.userData = userData;
-        saveObject.quiz = questions;
+        saveObject.quiz = quizData;
         saveObject.memory = memoryData;
 
-        console.log(questions);
         $.ajax({
             type: "POST",
             url: this.baseURL + 'save',

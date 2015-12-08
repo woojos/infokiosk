@@ -9,6 +9,8 @@ var MemoryApp = Backbone.View.extend({
 
     imageOpened:"",
 
+    clickCount:0,
+
     timer:null,
     time:0,
 
@@ -33,6 +35,11 @@ var MemoryApp = Backbone.View.extend({
     },
 
     getDataToSave: function() {
+
+        if (0 == this.clickCount) {
+            return [];
+        }
+
         var saveObject = {};
         saveObject.time = this.time;
         return saveObject;
@@ -45,6 +52,8 @@ var MemoryApp = Backbone.View.extend({
         if (!id) {
             return;
         }
+
+        this.clickCount++;
 
         if ($("#" + id + " img").is(":hidden")) {
 
@@ -124,6 +133,7 @@ var MemoryApp = Backbone.View.extend({
         this.el.find('.invisible img').removeAttr('style');
         this.el.find('.invisible').removeClass('invisible')
         this.shuffleImages();
+        this.clickCount = 0;
 
         this.show();
 

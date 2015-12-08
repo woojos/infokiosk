@@ -96,6 +96,10 @@ var QuizApp = Backbone.View.extend({
             toReturn.push(f);
         });
 
+        if (0 == toReturn.length) {
+            return []
+        }
+
         var saveObject = {};
         saveObject.questions = toReturn;
         saveObject.time = this.time;
