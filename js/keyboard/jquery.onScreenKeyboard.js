@@ -32,6 +32,7 @@
 		var $tabKey = $keyboard.children('li.osk-tab');
 		var shift = false;
 		var capslock = false;
+		var alt = false;
 		var inputOptions = [];
 		var browserInPercent = $tabKey.css('marginRight').indexOf('%') > -1;
 
@@ -90,6 +91,18 @@
 			}
 		}
 
+		function switchOnAlt() {
+			$.each($('li.pl'), function(index, el){
+				$(el).html($(el).attr('data-with-alt'));
+			});
+		}
+
+		function switchOffAlt() {
+			$.each($('li.pl'), function(index, el){
+				$(el).html($(el).attr('data-without-alt'));
+			});
+		}
+
 		if (settings.draggable && jQuery.ui) {
 			$keyboard.children('li.osk-dragger').show();
 			$keyboard.css('paddingTop', '0').draggable({
@@ -135,6 +148,18 @@
 				$keyboard.fadeOut('fast');
 				$input.blur();
 				$keyboardTriggers.removeClass('osk-focused');
+				return false;
+			}
+
+			if ($key.hasClass('osk-alt')) {
+				alt = !alt;
+
+				if (true == alt) {
+					switchOnAlt();
+				} else {
+					switchOffAlt();
+				}
+
 				return false;
 			}
 
@@ -219,6 +244,11 @@
 				shift = false;
 			}
 
+			if (alt) {
+				switchOffAlt();
+				alt = false;
+			}
+
 			$input.focus().val($input.val() + character);
 			$input.trigger('keyup');
 		});
@@ -253,11 +283,11 @@
 				'</li>' +
 				'<li class="osk-number">' +
 					'<span class="osk-off">2</span>' +
-					'<span class="osk-on">&quot;</span>' +
+					'<span class="osk-on">@</span>' +
 				'</li>' +
 				'<li class="osk-number">' +
 					'<span class="osk-off">3</span>' +
-					'<span class="osk-on">&pound;</span>' +
+					'<span class="osk-on">#</span>' +
 				'</li>' +
 				'<li class="osk-number">' +
 					'<span class="osk-off">4</span>' +
@@ -298,13 +328,13 @@
 				'<li class="osk-tab">tab</li>' +
 				'<li class="osk-letter">q</li>' +
 				'<li class="osk-letter">w</li>' +
-				'<li class="osk-letter">e</li>' +
+				'<li class="osk-letter pl" data-with-alt="ę" data-without-alt="e">e</li>' +
 				'<li class="osk-letter">r</li>' +
 				'<li class="osk-letter">t</li>' +
 				'<li class="osk-letter">y</li>' +
 				'<li class="osk-letter">u</li>' +
 				'<li class="osk-letter">i</li>' +
-				'<li class="osk-letter">o</li>' +
+				'<li class="osk-letter pl" data-with-alt="ó" data-without-alt="o">o</li>' +
 				'<li class="osk-letter">p</li>' +
 				'<li class="osk-symbol">' +
 					'<span class="osk-off">[</span>' +
@@ -319,15 +349,15 @@
 					'<span class="osk-on">|</span>' +
 				'</li>' +
 				'<li class="osk-capslock">caps lock</li>' +
-				'<li class="osk-letter">a</li>' +
-				'<li class="osk-letter">s</li>' +
+				'<li class="osk-letter pl" data-with-alt="ą" data-without-alt="a">a</li>' +
+				'<li class="osk-letter pl" data-with-alt="ś" data-without-alt="s">s</li>' +
 				'<li class="osk-letter">d</li>' +
 				'<li class="osk-letter">f</li>' +
 				'<li class="osk-letter">g</li>' +
 				'<li class="osk-letter">h</li>' +
 				'<li class="osk-letter">j</li>' +
 				'<li class="osk-letter">k</li>' +
-				'<li class="osk-letter">l</li>' +
+				'<li class="osk-letter pl" data-with-alt="ł" data-without-alt="l">l</li>' +
 				'<li class="osk-symbol">' +
 					'<span class="osk-off">;</span>' +
 					'<span class="osk-on">:</span>' +
@@ -338,12 +368,12 @@
 				'</li>' +
 				'<li class="osk-return osk-last-item">return</li>' +
 				'<li class="osk-shift">shift</li>' +
-				'<li class="osk-letter">z</li>' +
-				'<li class="osk-letter">x</li>' +
-				'<li class="osk-letter">c</li>' +
+				'<li class="osk-letter pl" data-with-alt="ż" data-without-alt="z">z</li>' +
+				'<li class="osk-letter pl" data-with-alt="ź" data-without-alt="x">x</li>' +
+				'<li class="osk-letter pl" data-with-alt="ć" data-without-alt="c">c</li>' +
 				'<li class="osk-letter">v</li>' +
 				'<li class="osk-letter">b</li>' +
-				'<li class="osk-letter">n</li>' +
+				'<li class="osk-letter pl" data-with-alt="ń" data-without-alt="n">n</li>' +
 				'<li class="osk-letter">m</li>' +
 				'<li class="osk-symbol">' +
 					'<span class="osk-off">,</span>' +
